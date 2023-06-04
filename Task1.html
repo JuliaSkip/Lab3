@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="main.css" />
+    <title>Document</title>
+</head>
+
+<body bgcolor="lightGray" class="container">
+
+<section class="first">
+    
+    <section class="headline">
+        <input type="text" class="goodsName" placeholder="Назва товару"/>
+        <button class="tooltip addButton" data-tooltip="Add" ><b>Додати</b></button>
+    </section>
+    <hr>
+
+    <section class="line">
+        <section class="block" >
+            <input type="text" class="names" value="Помідори">
+        </section>
+        <section class="block"> 
+            <span class="tooltip canRemove" id="removeTomatoes" data-tooltip="Remove"><b>-</b></span>
+            <span class="goods" id="tomatoesAmount" >2</span>
+            <span class="tooltip addGoods" id="addTomatoes" data-tooltip="Add"><b>+</b></span>
+        </section>
+        <section class="Bblock">
+           <button class="boughtButton tooltip" id="boughtTomatoes" data-tooltip="Not Bought">Куплено</button>
+           <span class="tooltip cross" data-tooltip="Delete"><b>⨯</b></span>
+        </section>
+    </section>
+    <hr>
+
+    <section class="line" >
+        <section class="block" >
+            <input type="text" class="names" value="Печиво">
+        </section>
+       <section class="block"> 
+           <span class="tooltip canRemove" id="removeCookies" data-tooltip="Remove"><b>-</b></span>
+           <span class="goods" id="cookiesAmount">2</span>
+           <span class="tooltip addGoods" id="addCookies" data-tooltip="Add"><b>+</b></span>
+       </section>
+       <section class="Bblock">
+           <button class="boughtButton tooltip" id="boughtCookies" data-tooltip="Bought">Куплено</button>
+           <span class="tooltip cross"  data-tooltip="Delete"><b>⨯</b></span>
+       </section>
+    </section>
+    <hr>
+
+    <section class="line" >
+        <section class="block" >
+            <input type="text" class="names" value="Сир">
+        </section>
+        <section class="block">
+            <span class="tooltip cantRemove" id="removeCheese" data-tooltip="Remove" ><b>-</b></span>
+            <span class="goods" id="cheeseAmount">1</span>
+            <span class="tooltip addGoods" id="addCheese"  data-tooltip="Add" ><b>+</b></span>
+       </section>
+       <section class="Bblock">
+           <button class="boughtButton tooltip" id="boughtCheese" data-tooltip="Bought">Куплено</button>
+           <span class="tooltip cross"  data-tooltip="Delete" ><b>⨯</b></span>
+       </section>
+    </section>
+    <hr>
+
+</section>
+
+<section class="second">
+    <div class="leftText"><h2>Залишилося</h2></div>
+    <hr>
+    <section class="left">
+        <span class="product-item">
+            <span>Помідори</span>
+            <span class="amount" id="tomatoesAmount2" >2</span>
+        </span>
+        <span class="product-item" >
+		    <span>Печиво</span>
+		    <span class="amount" id="cookiesAmount2">2</span>
+	    </span>
+        <span class="product-item" >
+		   <span>Сир</span>
+		   <span class="amount" id="cheeseAmount2" >1</span>
+	   </span>
+    </section>
+    <hr>
+
+   <div class="boughtText"><h2>Куплено</h2></div> 
+   <hr>
+   <section class="bought">
+   </section>
+
+</section>
+
+<div class="badge">
+    <h3  class="buyList" ><b>Buy List</b></h3>
+    <h6  class="creator" >Created by:</h6>
+    <h4  class="myName" >Julia Skip</h4>
+</div>
+
+<script src="C:\Users\Admin\Desktop\Lab3\lab3.js"></script>
+</body>
+</html>
