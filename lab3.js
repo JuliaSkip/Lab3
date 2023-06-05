@@ -1,97 +1,162 @@
-var add = ['addTomatoes','addCookies','addCheese']
-var remove = ['removeTomatoes','removeCookies','removeCheese']
-var goodsAmount = [document.getElementById("tomatoesAmount"), document.getElementById("cookiesAmount"),
-document.getElementById("cheeseAmount")]
-var goodsAmount2 = [document.getElementById("tomatoesAmount2"), document.getElementById("cookiesAmount2"),
-document.getElementById("cheeseAmount2")]
-var cross = document.querySelectorAll('.cross');
-var bButton = ['boughtTomatoes','boughtCookies','boughtCheese'];
-var amount = [2,2,1]
-var newElement
 
-for(var i=0; i<add.length; i++){
-
-    check();
-
-    document.getElementById(add[i]).addEventListener("click", addGoods)
-    document.getElementById(remove[i]).addEventListener("click", addGoods)
-    cross[i].addEventListener("click", removeLine);
-    document.getElementById(bButton[i]).addEventListener("click", boughtButton)
-
-}
-
-
-function check(){
-
-    for(var i=0; i<add.length; i++){
-        if(amount[i]===1){
-            var paragraph = document.getElementById(remove[i]);
-            paragraph.classList.add("cantRemove");
-            paragraph.classList.remove("canRemove");
-        }else if(amount[i]>1){
-            var paragraph = document.getElementById(remove[i]);
-            paragraph.classList.add("canRemove");
-            paragraph.classList.remove("cantRemove");
-        }
-    }
-}
-
-function addGoods(event) {
-
- var buttonId = event.target.id;
-
-  for(var i=0; i<add.length; i++){
-    if (buttonId == add[i]) {
-        ++amount[i]
-        goodsAmount[i].innerHTML = amount[i];
-        goodsAmount2[i].innerHTML = amount[i];
-    }else if (buttonId == remove[i] && amount[i]!==1) {
-        --amount[i];
-        goodsAmount[i].innerHTML = amount[i];
-        goodsAmount2[i].innerHTML = amount[i];
-    }
-    check();
-}
-}
-
-function removeLine(event) {
-    var line = event.target.closest('.line');
-    var fieldBorder = line.querySelector('.names');
-    var value = fieldBorder.getAttribute('value');
-    var productItems = document.querySelectorAll('.left .product-item');
+function addEventListeners() {
+    var canRemoveButtons = document.querySelectorAll('.canRemove');
+    var addGoodsButtons = document.querySelectorAll('.addGoods');
   
-    line.remove();
-  
-    productItems.forEach(function(productItem) {
-      var productItemText = productItem.textContent.trim();
-      if (productItemText.includes(value)) {
-        productItem.remove();
-      }
-    });
-}
-
-function boughtButton(event){
-    var buttonId = event.target.id;
-
-    for (var i = 0; i < bButton.length; i++) {
-        if (buttonId == bButton[i] && document.getElementById(bButton[i]).textContent == "Куплено") {
-            document.getElementById(bButton[i]).textContent = "Не куплено";
-            cross[i].style.display = "none";
-            var line = event.target.closest('.line');
-            var fieldBorder = line.querySelector('.names');
-            var value = fieldBorder.getAttribute('value');
-            
-          
-            productItems.forEach(function(productItem) {
+    canRemoveButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+          var goodsElement = button.nextElementSibling;
+          var currentAmount = parseInt(goodsElement.innerText);
+      
+          if (currentAmount > 1) {
+            currentAmount--;
+            goodsElement.innerText = currentAmount;
+      
+            var line = button.closest('.line');
+            var fieldBorder = line.querySelector('.block');
+            var placeholderValue = fieldBorder.querySelector('.names').value;
+            var productItems = document.querySelectorAll('.left .product-item');
+            var amounts = document.querySelectorAll('.left .product-item .amount');
+      
+            productItems.forEach(function(productItem, index) {
               var productItemText = productItem.textContent.trim();
-              if (productItemText.includes(value)) {
-                productItem.remove();
+              if (productItemText.includes(placeholderValue)) {
+                amounts[index].innerText = currentAmount;
               }
             });
+      
+            updateCanRemoveButton(goodsElement);
+          }
+        });
+      });
+      
+  
+    addGoodsButtons.forEach(function(button) {
+      button.addEventListener('click', function() {
+        var goodsElement = button.previousElementSibling;
+        var currentAmount = parseInt(goodsElement.innerText);
+        currentAmount++
+        goodsElement.innerText = currentAmount;
 
-        } else if (buttonId == bButton[i] && document.getElementById(bButton[i]).textContent == "Не куплено") {
-            document.getElementById(bButton[i]).textContent = "Куплено";
-            cross[i].style.display = "inline-block";
-        }
+        var line = button.closest('.line');
+        var fieldBorder = line.querySelector('.block');
+        var placeholderValue = fieldBorder.querySelector('.names').value;
+        var productItems = document.querySelectorAll('.left .product-item');
+        var amounts = document.querySelectorAll('.left .product-item .amount');
+  
+        productItems.forEach(function(productItem, index) {
+          var productItemText = productItem.textContent.trim();
+          if (productItemText.includes(placeholderValue)) {
+            amounts[index].innerText = currentAmount;
+          }
+        }); 
+
+        updateCanRemoveButton(goodsElement);
+      });
+    });
+  }
+  
+ 
+  function updateCanRemoveButton(goodsElement) {
+    var currentAmount = parseInt(goodsElement.innerText);
+    var canRemoveButton = goodsElement.previousElementSibling;
+  
+    if (currentAmount <= 1) {
+      canRemoveButton.classList.remove('canRemove');
+      canRemoveButton.classList.add('cantRemove');
+    } else {
+      canRemoveButton.classList.remove('cantRemove');
+      canRemoveButton.classList.add('canRemove');
     }
+  }
+  
+
+  document.addEventListener('click', function(event) {
+    if (event.target.classList.contains('canRemove') || event.target.classList.contains('addGoods')) {
+      var line = event.target.closest('.line');
+      var goodsElement = line.querySelector('.goods');
+      updateCanRemoveButton(goodsElement);
+    }
+  });
+  
+
+  document.addEventListener('click', function(event) {
+    if (event.target.classList.contains('cross')) {
+      var line = event.target.closest('.line');
+      line.remove();
+  
+      var fieldBorder = line.querySelector('.block');
+      var placeholderValue = fieldBorder.querySelector('.names').value;
+      var productItems = document.querySelectorAll('.left .product-item');
+  
+      productItems.forEach(function(productItem) {
+        var productItemText = productItem.textContent.trim();
+        if (productItemText.includes(placeholderValue)) {
+          productItem.remove();
+        }
+      }); 
+    }
+  });
+  
+  
+
+  document.addEventListener('click', function(event) {
+    if (event.target.classList.contains('boughtButton')) {
+      var button = event.target;
+      var currentStatus = button.textContent.trim();
+      var newStatus = currentStatus === "Куплено" ? "Не куплено" : "Куплено";
+      button.textContent = newStatus;
+  
+      var line = button.closest('.line');
+      var goodsName = line.querySelector('.names');
+      var productItem = line.querySelector('.product-item');
+      var boughtProducts = document.querySelector('.bought');
+  
+      if (newStatus === "Не куплено") {
+        line.querySelector('.cross').style.display = "none";
+        goodsName.style.textDecoration = "line-through";
+        boughtProducts.appendChild(productItem);
+      } else {
+        line.querySelector('.cross').style.display = "inline-block";
+        goodsName.style.textDecoration = "none";
+        var leftPart = document.querySelector('.left');
+        leftPart.appendChild(productItem);
+      }
+    }
+  });
+  
+
+  var addButton = document.querySelector('.addButton');
+  addButton.addEventListener('click', function() {
+    var textField = document.querySelector('.goodsName');
+    var inputValue = textField.value;
+  
+    if (inputValue.trim() !== "") {
+      var newLine = document.createElement("section");
+      newLine.classList.add("line");
+
+      newLine.innerHTML = 
+      `<section class="block" >
+      <input type="text" class="names" value="${inputValue}">
+    </section>
+    <section class="block"> 
+      <span class="tooltip canRemove" data-tooltip="remove product">-</span>
+      <span class="goods">2</span>
+      <span class="tooltip addGoods" data-tooltip="add product">+</span>
+    </section>
+    <section class="Bblock">
+      <button class="boughtButton tooltip" data-tooltip="not bought">Куплено</button>
+      <span class="tooltip cross" data-tooltip="delete">⨯</span>
+    </section>
+  `;
+
+  var leftPart = document.querySelector('.first');
+  leftPart.appendChild(newLine);
+  textField.value = ""; 
+  leftPart.style.height = (leftPart.offsetHeight + 56) + 'px';
+  addEventListeners(); 
 }
+});
+
+
+addEventListeners();
