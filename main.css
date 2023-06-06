@@ -3,7 +3,7 @@
 	background-color: white;
     padding: 10px;
     border-radius: 5px;
-    height: 210px;
+    height: 206px;
 	position: relative;
 	width: 60%;
 }
@@ -39,6 +39,12 @@
 	justify-content: space-between;
 	align-items: center;
 	width: 100%;
+	height: 35px;
+	border: none;
+	border-bottom: solid rgb(199, 199, 199) 1px;
+	padding: 9px;
+	position: relative;
+	left: -10px;
 }
 
 .headline{
@@ -46,7 +52,12 @@
 	justify-content: space-between;
 	align-items: center;
 	width: 100%;
-	height: 25%;
+	height: 35px;
+	border: none;
+	border-bottom: solid rgb(199, 199, 199) 1px;
+	padding: 10px;
+	position: relative;
+	left: -10px;
 }
 
 .left{
@@ -69,7 +80,7 @@
 	border-style: groove;
 	border-color: rgb(241, 241, 241);
 	position: relative;
-	left: 5px;
+	top:-5px; right: -5px;
 	height: 25.3px;
 	width: 105%;
 	padding: 5px;
@@ -86,7 +97,7 @@
 	border: none;
 	border-bottom: 0.3rem solid rgb(72, 116, 176);
 	position: relative;
-	left: -5px; top: -1px;
+	top:-5px;
 	height: 37.65px;
 	width: 20%;
 	padding: 5px;
@@ -122,19 +133,6 @@
 	font: 1.1em sans-serif;
 	border-radius: 20px;
 	border-bottom: 0.2rem solid rgb(197, 22, 22);
-	display: inline-block;
-	height: 18px;
-	width: 20px;
-	padding: 2%;
-	text-align: center;
-}
-
-.cantRemove{
-	background-color: rgb(236, 179, 179);
-	color: white;
-	font: 1.1em sans-serif;
-	border-radius: 20px;
-	border-bottom: 0.2rem solid rgb(236, 179, 179);
 	display: inline-block;
 	height: 18px;
 	width: 20px;
@@ -200,6 +198,8 @@
 	position: relative;
 	top: 10px;
 	gap: 10px;
+	margin-bottom: 10px;
+	margin-right: 10px;
 }
 
 .amount {
