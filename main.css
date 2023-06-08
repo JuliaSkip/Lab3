@@ -91,6 +91,12 @@
 	color: rgb(219, 214, 214);
 }
 
+.goodsName:focus{
+	outline: none;
+	border: 1.5px solid rgb(136, 223, 252) ;
+	border-radius: 4px;
+}
+
 .addButton{
 	background-color: rgb(82, 138, 215);
 	color: white;
