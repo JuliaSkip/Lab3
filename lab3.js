@@ -134,6 +134,7 @@ function handleGreenPlusClick() {
         line.querySelector('.addGoods').style.visibility = "hidden"
         line.querySelector('.canRemove').style.visibility = "hidden"
         goodsName.style.textDecoration = "line-through";
+        goodsName.readOnly = true;
         var productItems = document.querySelectorAll('.left .product-item');
         var amounts = document.querySelectorAll('.left .product-item .amount');
   
@@ -153,6 +154,7 @@ function handleGreenPlusClick() {
         line.querySelector('.addGoods').style.visibility = "visible"
         line.querySelector('.canRemove').style.visibility = "visible"
         goodsName.style.textDecoration = "none";
+        goodsName.readOnly = false;
         var productItems = document.querySelectorAll('.bought .product-item');
         var amounts = document.querySelectorAll('.bought .product-item .amount');
 
