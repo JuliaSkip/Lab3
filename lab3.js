@@ -1,27 +1,54 @@
-// Function to add event listeners to red-minus and green-plus buttons
+
+//adding event listeners
 function addEventListeners() {
-  var redMinusButtons = document.querySelectorAll('.canRemove');
-  var greenPlusButtons = document.querySelectorAll('.addGoods');
+  var removeButton = document.querySelectorAll('.canRemove');
+  var addButton = document.querySelectorAll('.addGoods');
   var nameField = document.querySelectorAll('.names');
  
-  nameField.forEach(function(fieldBorder) {
-    fieldBorder.removeEventListener('input', handleNameFieldClick);
-    fieldBorder.addEventListener('input', handleNameFieldClick);
+  nameField.forEach(function(nameField) {
+    nameField.addEventListener('keydown', rename);
   });
 
-  redMinusButtons.forEach(function(button) {
-    button.removeEventListener('click', handleRedMinusClick);
-    button.addEventListener('click', handleRedMinusClick);
+  removeButton.forEach(function(button) {
+    button.removeEventListener('click', removeGoods);
+    button.addEventListener('click', removeGoods);
   });
 
-  greenPlusButtons.forEach(function(button) {
-    button.removeEventListener('click', handleGreenPlusClick);
-    button.addEventListener('click', handleGreenPlusClick);
+  addButton.forEach(function(button) {
+    button.removeEventListener('click', addGoods);
+    button.addEventListener('click', addGoods);
   });
 }
 
-// Function to handle red-minus button click
-function handleRedMinusClick() {
+  //add event listeners
+  document.addEventListener('click', function(event) {
+    if (event.target.classList.contains('canRemove') || event.target.classList.contains('addGoods')) {
+      var line = event.target.closest('.line');
+      var goodsElement = line.querySelector('.goods');
+      check(goodsElement);
+    }
+  });
+  
+
+
+ //changes minus button
+ function check(goodsElement) {
+  var currentAmount = parseInt(goodsElement.innerText);
+  var canRemoveButton = goodsElement.previousElementSibling;
+
+  if (currentAmount <= 1) {
+    canRemoveButton.style.backgroundColor = 'rgb(236, 179, 179)';
+    canRemoveButton.style.borderBottom = '0.2rem solid rgb(236, 179, 179)';
+    canRemoveButton.dataset.tooltip = 'Can`t remove';
+  } else {
+    canRemoveButton.style.backgroundColor = 'red';
+    canRemoveButton.style.borderBottom = '0.2rem solid rgb(197, 22, 22)';
+    canRemoveButton.dataset.tooltip = 'Remove';
+  }
+}
+
+// reduces number
+function removeGoods() {
   var amountElement = this.nextElementSibling;
   var currentAmount = parseInt(amountElement.innerText);
   if (currentAmount > 1) {
@@ -29,85 +56,61 @@ function handleRedMinusClick() {
     amountElement.innerText = currentAmount;
 
     var line = this.closest('.line');
-    var fieldBorder = line.querySelector('.names');
-    var placeholderValue = fieldBorder.getAttribute('value');
+    var nameField = line.querySelector('.names');
+    var value = nameField.getAttribute('value');
     var productItems = document.querySelectorAll('.left .product-item');
     var amounts = document.querySelectorAll('.left .product-item .amount');
 
     productItems.forEach(function(productItem, index) {
       var productItemText = productItem.textContent.trim();
-      if (productItemText.includes(placeholderValue)) {
+      if (productItemText.includes(value)) {
         amounts[index].innerText = currentAmount;
       }
     });
 
     updateRedMinusButton(amountElement);
-    updateCanRemoveButton(goodsElement);
+    check(goodsElement);
   }
 }
 
-// Function to handle green-plus button click
-function handleGreenPlusClick() {
+// increases the number
+function addGoods() {
   var amountElement = this.previousElementSibling;
   var currentAmount = parseInt(amountElement.innerText);
   currentAmount = currentAmount + 1;
   amountElement.innerText = currentAmount;
 
   var line = this.closest('.line');
-  var fieldBorder = line.querySelector('.names');
-  var placeholderValue = fieldBorder.getAttribute('value');
+  var nameField = line.querySelector('.names');
+  var value = nameField.getAttribute('value');
   var productItems = document.querySelectorAll('.left .product-item');
   var amounts = document.querySelectorAll('.left .product-item .amount');
 
   productItems.forEach(function(productItem, index) {
     var productItemText = productItem.textContent.trim();
-    if (productItemText.includes(placeholderValue)) {
+    if (productItemText.includes(value)) {
       amounts[index].innerText = currentAmount;
     }
   });
 
-  updateRedMinusButton(amountElement);
-  updateCanRemoveButton(goodsElement);
+  check(goodsElement);
 }
-  
- //changes minus button
-  function updateCanRemoveButton(goodsElement) {
-    var currentAmount = parseInt(goodsElement.innerText);
-    var canRemoveButton = goodsElement.previousElementSibling;
-  
-    if (currentAmount <= 1) {
-      canRemoveButton.style.backgroundColor = 'rgb(236, 179, 179)';
-      canRemoveButton.style.borderBottom = '0.2rem solid rgb(236, 179, 179)';
-    } else {
-      canRemoveButton.style.backgroundColor = 'red';
-      canRemoveButton.style.borderBottom = '0.2rem solid rgb(197, 22, 22)';
-    }
-  }
-  
-  //add event listeners
-  document.addEventListener('click', function(event) {
-    if (event.target.classList.contains('canRemove') || event.target.classList.contains('addGoods')) {
-      var line = event.target.closest('.line');
-      var goodsElement = line.querySelector('.goods');
-      updateCanRemoveButton(goodsElement);
-    }
-  });
   
   //remove line
   document.addEventListener('click', function(event) {
     if (event.target.classList.contains('cross')) {
       var line = event.target.closest('.line');
       line.remove();
-      var leftPart = document.querySelector('.first');
-      leftPart.style.height = (leftPart.offsetHeight - 75) + 'px';
+      var firstPart = document.querySelector('.first');
+      firstPart.style.height = (firstPart.offsetHeight - 75) + 'px';
   
-      var fieldBorder = line.querySelector('.block');
-      var placeholderValue = fieldBorder.querySelector('.names').value;
+      var nameField = line.querySelector('.block');
+      var value = nameField.querySelector('.names').value;
       var productItems = document.querySelectorAll('.left .product-item');
   
       productItems.forEach(function(productItem) {
         var productItemText = productItem.textContent.trim();
-        if (productItemText.includes(placeholderValue)) {
+        if (productItemText.includes(value)) {
           productItem.remove();
         }
       }); 
@@ -124,8 +127,8 @@ function handleGreenPlusClick() {
       var newStatus = currentStatus === "Куплено" ? "Не куплено" : "Куплено";
       var line = button.closest('.line');
       var goodsName = line.querySelector('.names');
-      var fieldBorder = line.querySelector('.block');
-      var placeholderValue = fieldBorder.querySelector('.names').value;
+      var nameField = line.querySelector('.block');
+      var value = nameField.querySelector('.names').value;
       button.textContent = newStatus;
   
 
@@ -133,6 +136,7 @@ function handleGreenPlusClick() {
         line.querySelector('.cross').style.display = "none";
         line.querySelector('.addGoods').style.visibility = "hidden"
         line.querySelector('.canRemove').style.visibility = "hidden"
+        line.querySelector('.boughtButton').dataset.tooltip = 'Cancel purchase';
         goodsName.style.textDecoration = "line-through";
         goodsName.readOnly = true;
         var productItems = document.querySelectorAll('.left .product-item');
@@ -140,12 +144,12 @@ function handleGreenPlusClick() {
   
         productItems.forEach(function(productItem, index) {
           var productItemText = productItem.textContent.trim();
-          if (productItemText.includes(placeholderValue)) {
+          if (productItemText.includes(value)) {
             productItem.remove();
             var boughtPart = document.querySelector('.bought');
             boughtPart.appendChild(productItem);
-            productItem.style.textDecoration = "line-through"; // Apply line-through text decoration
-            amounts[index].style.textDecoration = "line-through"; // Apply line-through text decoration to amount element
+            productItem.style.textDecoration = "line-through"; 
+            amounts[index].style.textDecoration = "line-through"; 
           }
         });
   
@@ -153,6 +157,7 @@ function handleGreenPlusClick() {
         line.querySelector('.cross').style.display = "inline-block";
         line.querySelector('.addGoods').style.visibility = "visible"
         line.querySelector('.canRemove').style.visibility = "visible"
+        line.querySelector('.boughtButton').dataset.tooltip = 'Buy';
         goodsName.style.textDecoration = "none";
         goodsName.readOnly = false;
         var productItems = document.querySelectorAll('.bought .product-item');
@@ -160,12 +165,12 @@ function handleGreenPlusClick() {
 
         productItems.forEach(function(productItem, index) {
           var productItemText = productItem.textContent.trim();
-          if (productItemText.includes(placeholderValue)) {
+          if (productItemText.includes(value)) {
             productItem.remove();
             var leftPart = document.querySelector('.left');
             leftPart.appendChild(productItem);
-            productItem.style.textDecoration = "none"; // Remove line-through text decoration
-            amounts[index].style.textDecoration = "none"; // Remove line-through text decoration from amount element
+            productItem.style.textDecoration = "none"; 
+            amounts[index].style.textDecoration = "none"; 
           }
         });
   
@@ -173,26 +178,26 @@ function handleGreenPlusClick() {
     }
   });
 
-
+// adding new product
   var addButton = document.querySelector('.addButton');
   var textField = document.querySelector('.goodsName');
   
-  addButton.addEventListener('click', addProduct);
+  addButton.addEventListener('click', addNewGoods);
   textField.addEventListener('keydown', function(event) {
     if (event.key === 'Enter') {
-      addProduct();
+      addNewGoods();
     }
   });
   
-  function addProduct() {
+  function addNewGoods() {
     var inputValue = textField.value;
   
     if (inputValue.trim() !== "") {
-      var existingPlaceholders = Array.from(document.querySelectorAll('.names')).map(function(fieldBorder) {
-        return fieldBorder.getAttribute('value').toLowerCase();
+      var existingValues = Array.from(document.querySelectorAll('.names')).map(function(nameField) {
+        return nameField.getAttribute('value').toLowerCase();
       });
   
-      if (existingPlaceholders.includes(inputValue.toLowerCase())) {
+      if (existingValues.includes(inputValue.toLowerCase())) {
         alert("Продукт з таким іменем уже існує!");
         textField.value = "";
       } else {
@@ -201,11 +206,11 @@ function handleGreenPlusClick() {
   
         newLine.innerHTML = 
       `<section class="block" >
-        <input type="text" class="names" value="${inputValue}">
+        <input type="text" class="names" value="${inputValue}" data-value="${inputValue}">
       </section>
       <section class="block"> 
         <span class="tooltip canRemove" style="background-color: rgb(236, 179, 179); 
-        border-bottom: 0.2rem solid rgb(236, 179, 179)" data-tooltip="Remove">-</span>
+        border-bottom: 0.2rem solid rgb(236, 179, 179)" data-tooltip="Can\`t remove">-</span>
         <span class="goods">1</span>
         <span class="tooltip addGoods" data-tooltip="Add">+</span>
       </section>
@@ -220,41 +225,49 @@ function handleGreenPlusClick() {
   
         newItem.innerHTML = 
         `<span class="product-item">
-          <span class=nameLeft>${inputValue}</span>
+          <span class=nameLeft data-value="${inputValue}">${inputValue}</span>
           <span class="amount">1</span>
         </span>`;
   
-        var leftPart = document.querySelector('.first');
-        var rightPart = document.querySelector('.left');
+        var firstPart = document.querySelector('.first');
+        var secondPart = document.querySelector('.left');
         newItem.style.position = 'relative';
         newItem.style.top = '0.5px';
-        leftPart.appendChild(newLine);
-        rightPart.appendChild(newItem);
+        firstPart.appendChild(newLine);
+        secondPart.appendChild(newItem);
         textField.value = "";
-        leftPart.style.height = (leftPart.offsetHeight + 35) + 'px';
+        firstPart.style.height = (firstPart.offsetHeight + 35) + 'px';
         addEventListeners();
         textField.focus();
       }
     }
 }
 
+// changes names
+function rename(event) {
+  if (event.keyCode === 13) { 
+    var line = this.closest('.line');
+    var nameField = line.querySelector('.names');
+    var value = nameField.value;
+    var dataFirst = nameField.getAttribute('data-value');
+    var nameLeft = document.querySelectorAll('.left .product-item .nameLeft');
 
-function handleNameFieldClick() {
-  var line = this.closest('.line');
-  var fieldBorder = line.querySelector('.names');
-  var value = fieldBorder.value;
-  var placeholderValue = fieldBorder.getAttribute('value');
-  var productItems = document.querySelectorAll('.left .product-item');
-  var nameLeft = document.querySelectorAll('.left .product-item .nameLeft');
 
-  productItems.forEach(function(productItem, index) {
-    var productItemText = productItem.textContent.trim();
-    if (productItemText.includes(placeholderValue)) {
-      nameLeft[index].innerText = value;
-      nameField[index].value = value;
+    if (value.length === 0) {
+      nameField.value = 'Назва';
+      value = 'Назва';
     }
-  });
-}
 
+    nameLeft.forEach(function (name, index) {
+      var dataSecond = name.getAttribute('data-value');
+      if (dataFirst === dataSecond) {
+        name.innerText = value;
+        var nameField = document.querySelectorAll('.left .product-item .nameField');
+        nameField[index].value = value;
+        nameField.setAttribute('value', value);
+      }
+    });
+  }
+}
 
 addEventListeners();
