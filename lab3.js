@@ -1,3 +1,33 @@
+function updateLocalStorage() {
+  var firstElement = document.querySelector('.goodsSection');
+  var firstData = {
+    innerHTML: firstElement.innerHTML,
+  };
+  localStorage.setItem('goodsSection', JSON.stringify(firstData));
+
+  var secondElement = document.querySelector('.second');
+  var secondData = {
+    innerHTML: secondElement.innerHTML,
+  };
+  localStorage.setItem('second', JSON.stringify(secondData));
+}
+
+function loadBoughtPizzasFromLocalStorage() {
+  var buyList = JSON.parse(localStorage.getItem('goodsSection'));
+  var firstPart = document.querySelector('.goodsSection');
+  firstPart.innerHTML="";
+  var newElement = document.createElement('section');
+  newElement.innerHTML = buyList.innerHTML;
+  firstPart.appendChild(newElement);
+
+  var secondList = JSON.parse(localStorage.getItem('second'));
+  var secondPart = document.querySelector('.second');
+  secondPart.innerHTML="";
+  var secondElement = document.createElement('section');
+  secondElement.innerHTML = secondList.innerHTML;
+  secondPart.appendChild(secondElement);
+
+}
 
 //adding event listeners
 function addEventListeners() {
@@ -40,10 +70,12 @@ function addEventListeners() {
     canRemoveButton.style.backgroundColor = 'rgb(236, 179, 179)';
     canRemoveButton.style.borderBottom = '0.2rem solid rgb(236, 179, 179)';
     canRemoveButton.dataset.tooltip = 'Can`t remove';
+    updateLocalStorage()
   } else {
     canRemoveButton.style.backgroundColor = 'red';
     canRemoveButton.style.borderBottom = '0.2rem solid rgb(197, 22, 22)';
     canRemoveButton.dataset.tooltip = 'Remove';
+    updateLocalStorage()
   }
 }
 
@@ -58,17 +90,19 @@ function removeGoods() {
     var line = this.closest('.line');
     var nameField = line.querySelector('.names');
     var value = nameField.getAttribute('value');
+    var resultValue = value.replace(/\s/g, "");
     var productItems = document.querySelectorAll('.left .product-item');
     var amounts = document.querySelectorAll('.left .product-item .amount');
 
     productItems.forEach(function(productItem, index) {
       var productItemText = productItem.textContent.trim();
-      if (productItemText.includes(value)) {
+      var resultproductItemText = productItemText.replace(/\s/g, "");
+      if (resultproductItemText.includes(resultValue)) {
         amounts[index].innerText = currentAmount;
       }
     });
 
-    updateRedMinusButton(amountElement);
+    updateLocalStorage()
     check(goodsElement);
   }
 }
@@ -88,11 +122,14 @@ function addGoods() {
 
   productItems.forEach(function(productItem, index) {
     var productItemText = productItem.textContent.trim();
-    if (productItemText.includes(value)) {
+    var resultproductItemText = productItemText.replace(/\s/g, "");
+    var resultValue = value.replace(/\s/g, "");
+    if (resultproductItemText.includes(resultValue)) {
       amounts[index].innerText = currentAmount;
     }
   });
 
+  updateLocalStorage()
   check(goodsElement);
 }
   
@@ -101,8 +138,6 @@ function addGoods() {
     if (event.target.classList.contains('cross')) {
       var line = event.target.closest('.line');
       line.remove();
-      var firstPart = document.querySelector('.first');
-      firstPart.style.height = (firstPart.offsetHeight - 75) + 'px';
   
       var nameField = line.querySelector('.block');
       var value = nameField.querySelector('.names').value;
@@ -110,11 +145,14 @@ function addGoods() {
   
       productItems.forEach(function(productItem) {
         var productItemText = productItem.textContent.trim();
-        if (productItemText.includes(value)) {
+        var resultproductItemText = productItemText.replace(/\s/g, "");
+        var resultValue = value.replace(/\s/g, "");
+        if (resultproductItemText.includes(resultValue)) {
           productItem.remove();
         }
       }); 
     }
+    updateLocalStorage()
   });
   
   
@@ -136,7 +174,7 @@ function addGoods() {
         line.querySelector('.cross').style.display = "none";
         line.querySelector('.addGoods').style.visibility = "hidden"
         line.querySelector('.canRemove').style.visibility = "hidden"
-        line.querySelector('.boughtButton').dataset.tooltip = 'Cancel purchase';
+        line.querySelector('.boughtButton').dataset.tooltip = 'Cancel';
         goodsName.style.textDecoration = "line-through";
         goodsName.readOnly = true;
         var productItems = document.querySelectorAll('.left .product-item');
@@ -144,7 +182,9 @@ function addGoods() {
   
         productItems.forEach(function(productItem, index) {
           var productItemText = productItem.textContent.trim();
-          if (productItemText.includes(value)) {
+          var resultproductItemText = productItemText.replace(/\s/g, "");
+          var resultValue = value.replace(/\s/g, "");
+          if (resultproductItemText.includes(resultValue)) {
             productItem.remove();
             var boughtPart = document.querySelector('.bought');
             boughtPart.appendChild(productItem);
@@ -152,7 +192,7 @@ function addGoods() {
             amounts[index].style.textDecoration = "line-through"; 
           }
         });
-  
+        updateLocalStorage()
       } else {
         line.querySelector('.cross').style.display = "inline-block";
         line.querySelector('.addGoods').style.visibility = "visible"
@@ -165,7 +205,9 @@ function addGoods() {
 
         productItems.forEach(function(productItem, index) {
           var productItemText = productItem.textContent.trim();
-          if (productItemText.includes(value)) {
+          var resultproductItemText = productItemText.replace(/\s/g, "");
+          var resultValue = value.replace(/\s/g, "");
+          if (resultproductItemText.includes(resultValue)) {
             productItem.remove();
             var leftPart = document.querySelector('.left');
             leftPart.appendChild(productItem);
@@ -173,14 +215,15 @@ function addGoods() {
             amounts[index].style.textDecoration = "none"; 
           }
         });
-  
+        updateLocalStorage()
       }
     }
+    updateLocalStorage()
   });
 
 // adding new product
-  var addButton = document.querySelector('.addButton');
-  var textField = document.querySelector('.goodsName');
+var addButton = document.querySelector('.addButton');
+var textField = document.querySelector('.goodsName');
   
   addButton.addEventListener('click', addNewGoods);
   textField.addEventListener('keydown', function(event) {
@@ -229,16 +272,16 @@ function addGoods() {
           <span class="amount">1</span>
         </span>`;
   
-        var firstPart = document.querySelector('.first');
+        var firstPart = document.querySelector('.goodsSection');
         var secondPart = document.querySelector('.left');
         newItem.style.position = 'relative';
         newItem.style.top = '0.5px';
         firstPart.appendChild(newLine);
         secondPart.appendChild(newItem);
         textField.value = "";
-        firstPart.style.height = (firstPart.offsetHeight + 35) + 'px';
         addEventListeners();
         textField.focus();
+        updateLocalStorage()
       }
     }
 }
@@ -252,22 +295,23 @@ function rename(event) {
     var dataFirst = nameField.getAttribute('data-value');
     var nameLeft = document.querySelectorAll('.left .product-item .nameLeft');
 
-
     if (value.length === 0) {
       nameField.value = 'Назва';
       value = 'Назва';
     }
 
-    nameLeft.forEach(function (name, index) {
+    nameLeft.forEach(function (name) {
       var dataSecond = name.getAttribute('data-value');
       if (dataFirst === dataSecond) {
         name.innerText = value;
-        var nameField = document.querySelectorAll('.left .product-item .nameField');
-        nameField[index].value = value;
-        nameField.setAttribute('value', value);
       }
     });
+
+    nameField.setAttribute('value', value);
+    updateLocalStorage();
   }
 }
 
+
+loadBoughtPizzasFromLocalStorage()
 addEventListeners();
